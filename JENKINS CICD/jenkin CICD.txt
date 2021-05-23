@@ -1,0 +1,166 @@
+three type access of jenkins
+1.jenkin file(mostly use)
+2.terminal
+3.UI
+
+JENKINS PLUGINS FOR DOCKER
+-cloudbees docker build & publish plugin
+
+installation
+https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-20-04
+====================================
+we need to decide whick version we need for jemnkins
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt update
+ysudo apt install openjdk-11-jdk
+sudo apt install jenkins
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+cat /var/lib/jenkins/secrets/initialAdminPassword
+
+copy e3f94f3177bc40d295ea29a89140fe49
+go to brower pest password-> suggested plugins
+
+Create first Admin user & Password.
+login :by above user &Password.
+==================================
+3GB jenkins Java
+
+1GB jenkins-node, docker
+
+4Gb Git-lab, java, docker
+
+1 Docker-compose, docker
+
+
+===================================================
+3 stack docker
+
+
+
+jenkins slave
+sudo apt update
+sudo apt install openjdk-11-jdk
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+sudo apt update
+sudo apt install docker-ce -y
+sudo systemctl status docker
+sudo adduser jenkins
+sudo su
+su jenkins
+ssh-keygen
+sudo usermod -aG docker ${USER}
+sudo usermod -aG dock
+
+========================================
+
+3 gb jenkins java
+1 gb jenkins-node-docker
+4 gb gitlab  java   -docker
+server
+1 deocker compose-server  docker
+3 stack-(awarm) docker
+======================================
+cat var/lib/jenkins
+cat var/lib/jenkins
+==================================================================================
+how to connect jenkins master to node<passwordless authentication>
+===================================================================================
+to create ssh key-> ssh-keygen key saved @ /home/prashant/.ssh/id_rsa
+
+@master
+#pwd
+#whoami
+#ssh-keygen
+
+#cd .ssh
+id_rsa(lock)     id_sra.pub(key)
+=========================================================================
+go to jnode   @ open terminal
+#apt install net-tools
+#ifconfig    -> note ip
+#jenkins slave
+#sudo apt update
+#sudo apt install openjdk-11-jdk
+#sudo apt install apt-transport-https ca-certificates curl software-properties-common
+#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+#sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+#sudo apt update
+#sudo apt install docker-ce -y
+#sudo systemctl status docker
+#sudo adduser jenkins
+#sudo su
+#su jenkins
+note key should be in home directory
+#ssh-keygen
+cd .ssh
+cat id_sra.pub  ->copy key
+=========
+go to master 
+nano authorized_kays    ->pest key content  
+save it by cntrl=x   => y => enter
+#ls
+cat id_sra.pub  ->copy key
+
+go to node
+nano authorized_kays    ->pest key content  
+save it by cntrl=x   => y => enter
+
+go to master
+ssh jenkins@192.168.153.15   
+yes
+enter
+=====================
+node
+ssh jenkins@192.168.10,10
+yes->enter
+===============================
+
+===========================================
+#sudo usermod -aG docker jenkins
+#sudo usermod -aG dock
+#ssh-keygen
+
+login to jenkins -> username $ password
+manage jenkins-install plugins
+Slave SetupPlugin
+ Gitlab Hook
+ GitLab
+ SSH Build Agents
+ Pipeline plugin
+
+manage jenkins-> manage crediantials -> global->add credentials
+-username   jenkins
+-pass
+
+=====================
+manage jenkins-> node & cloude
+new node 
+-name <jnode>
+-execuer 1
+-root home directory ->/home/jenkins
+lable  jnode
+launch method ssh
+host 192.168.153.129
+pest masters ssh keylock(id_rsa)
+=============
+click on jnode
+relaunch agent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

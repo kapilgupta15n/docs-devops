@@ -1,0 +1,186 @@
+1. install java,jenkins,git,maven
+setup java,git,maven path on jenkins console.
+install plugins
+a-git,
+b-github,
+=========
+MAVEN PLUGIN
+c-maven invoker,
+=======================
+TESTING PLUGINS
+d-junit,
+e-checkstyle{predefined code prectice & standards},
+f-pmd{predefined code prectice & standards},
+g-findbug,{find bugs in code features}
+==========================
+QUALITY GATEWAY PLUGIN
+h-static analyzer {used for  quality gateway}.
+we do the code validaytion & unit testing while creating build
+====================================================
+FOR DEPLOYMENT ON TOMCATE "DEPLOYMENT PLUGIN"
+
+i-deploy to container.
+we do functional testing on test servers.
+=============================================================================================
+JENKINS GLOBAL TOOLS CONFIGURATION
+
+whereis git  output is user/bin/git  setup this in jenkins global tool credential
+whereis maven /opt/apache-maven-3.6.57
+whereis java
+
+
+2. install java & setup Tomcat server
+
+=========================================
+ec2
+make sure custom-tcp=port 8080 is open in security group inbound rules(FOR EC2 MACHINE ONLY)
+install java
+yum install java
+================================
+INSTALL MAVEN TOMCAT
+cd opt
+wget <url>
+ sudo xvzf apache-tomcat-8.5.57.tar.gz
+cd apache-tomcat-8.5.57
+===================================================================================================================================================
+#find& edit this file(WE NEED TO UPDATE {1.CONTEXT.XML,2.conf/TOMCAT-USERS.XML(DEFINED USERS AND ROLES),3.conf/SERVER.XML(PORT CHANGE8080 TO 8090)}
+====================================================
+1.EDIT CONTEXT.XML
+#find /context.xml
+webapps/host-manager/meta-inf/context.xml
+
+nano webapps/host-manager/meta-inf/context.xml
+then commend two lines
+<!--  1.<valve classname
+2. allow=127  -->
+save it.
+if above two lines enabled then only you can access tomcat server only from local server.
+=========================================
+2.EDIT TOMCAT-USERS.XML 
+now create users on Tomcat
+go to conf directory->
+cd conf
+nano tomcat-users.xml
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>
+<user username="admin" password="admin" roles="manager-gui,manager-script,manager-jmx"/>
+<user username="deployer" password="deployer" roles="manager-script"/>
+<user username="tomcat" password="secret" roles="manager-gui"/>
+
+save.
+cd ..
+cd bin
+./startup.sh enter   => to start the services
+./shutdown.sh => to shut down the services.
+
+stat -tulpn => to check on which port the service is running {mostly it runs on port 8080}
+
+webbrower-public ip-ec2:8090
+now login as manager
+username =admin,password=admin as defined in tomcat-user.xml in role=manager-gui.
+
+============================================================================
+jenkins
+project
+build root pom.xml
+goal[clean package checkstyle:checkstyle pmd:pmd findbug:findbug ]
+buils setting:choose checkstyle,findbug,pmd,run always,health threshhold100%[50 errors],0%[200],
+status tresh hold all priority(100)means if errors are more than100 then consider this buld as failed,high priority[50]
+post build action: choose publish combined static result {static analysis}
+apply save
+
+============================================================
+TO HOST OUR APPLICATION ON TOMCAT SERVER
+TOMCAT# CD WEBAPPS
+WEBAPPS# find /*.war
+webapps# cd to that path & copy the path
+
+GO TO JENKINS
+-POST BUILD ACTION-> ADD post build action
+-deploy war/jar to a container
+-war/earfiles-[target/petclining.war or ***/*.war] path can be founf in our success build-  /workspace/target-petclining.war
+-context path-[]
+-containers-{select tomcat8} provide credentials[username=deployer,password=deployer as we mentioned in cat ../conf/tomcat-users.xml],url[192.168.128.137:8090]
+-
+
+===============================================================================================================
+=============================================================================================
+DEPLOY THROUGH PIPELINE SCRIPT
+===========================================================================
+
+we install plugins called SSH-agent plugin on jenkins.
+OUR CODE IS AT JENKINS SERVER-/VAR/LIB/JENKINS
+
+#CD VAR/LIB/JENKINS 
+#LS  WE FOUND HARE WORKSPACE DIRECTORY 
+CODE IS IN /WORKSPACE/PIPELINE_JOB/WEBAPPS/TARGET/*.WAR FILE
+#tree
+=======================
+pipeline {
+    agent any
+    environment {
+        PATH = /opt/apache=maven-3.6.3/bin:$PATH
+    }
+    stages {
+        stage('clone code') {
+            steps {
+                git credentialsId: 'git_credentials', url: 'http://'
+            }
+        }
+        stage('Build code') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+        stage('code Deploy') {
+            steps {
+                sshagent(['deploy_user']){
+                   sh "scp -o strictHostKeyChecking=no webapps/target/webapp.war ec2-user@tomcatserverip:opt/apache-maven3.3.57/webapps"
+             }
+        }
+             steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+===============================
+jenkins-pipeline
+definition [pipeline script]
+script{pest abive script here}
+pipeline syntax
+--sample step- SSH agent
+add tomcat ec2 -add credentials
+-kind ssh username & privatkey
+-deploy user
+-usr name ec2-user
+-privet kay=enterdirectoly={pest privat key}
+-add
+
+-generate the script
+output======
+sshagent(['deploy_user']){
+  //some block
+}
+========
+now copy our .war file on tomcat server through SCP commands.
+path is /var/lib/jenkins/workspace/pipeline_job/webapps/target/
+
+#scp /var/lib/jenkins/workspace/pipeline_job/webapps/target/webapp.war ec2-user@tomcatserverip:opt/apache-maven3.3.57/webapps
+
+
+note we need to run a command on tomcat server
+#chown -R ec2-user:ec2-user /opt
+note tomcar server ke webapps directory main .war file copy karte hai webapp main nahi.
+
+build now.
+================================================================
+note scp -command is used to copy file between two linux machine.
+#scp -i <key.pem> <from path> <to path>
+#scp -i <key.pem> <from> ec2-user@ip:<webapps path>
+
+
+
+

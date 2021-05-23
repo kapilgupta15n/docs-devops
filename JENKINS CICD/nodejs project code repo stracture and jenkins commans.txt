@@ -1,0 +1,54 @@
+java nodejs project code
+cong/nginx, public, packjage-json,package-lock.json,LICENCE,main.js,deploy.sh, README.md 
+
+node-modules repository create after build run(afert npm install && npm run command)
+myapp.4.tar.gz
+
+execute shell
+rm -rf *.tar.gz
+npm install
+tar cZf myapp$BUILD_NUMBER.tar.gz node-modules main.js angular.json public LICENCE
+
+
+
+post build action
+1-archive the artifacts
+files to archive{myapp-*.tar.gz}
+======================================================================================
+angular project 
+==================================================
+java angular nodejs project code
+src/app,angular.json,jenkinsfile,nginx.conf, public, packjage-json,package-lock.json,LICENCE,main.js,deploy.sh, README.md 
+
+node-modules repository create after build run(afert npm install && npm run command)
+myapp.4.tar.gz
+
+execute shell
+rm -rf *.tar.gz
+ng uild
+tar cZf myapp$BUILD_NUMBER.tar.gz node-modules main.js angular.json public LICENCE
+==============
+jenkins files
+
+node{
+    stage('checkout scn') {
+	    git branch: 'jenkins_test', url: 'github.com/prashantkat1980/jenkins_test.git', branch: 'dev'
+	}
+	stage('install node modules') {
+	sh "npm install"
+	}
+	stage('test') {
+	sh "npm run test-headless"
+	}
+	stage('build') {
+	sh "npm run build --prod"
+	}
+	stage('copy') {
+	sh "cp -a /var/lib/jenkins/workspace/angular-pipeline/dist/jenkins_test/. /var/www/jenkins-test/html/"
+	}
+
+
+
+
+}
+

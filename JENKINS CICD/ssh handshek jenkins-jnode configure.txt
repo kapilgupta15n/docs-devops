@@ -1,0 +1,112 @@
+
+FOR JENKINS MASTER & NODE CREATION THEIR CONFIGURATION THEN SSH -KEYLESS COMMUNICATION
+MASTER NODE
+#sudo apt install openjdk-11-jdl
+#sudo apt update
+
+#wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+
+#sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+#sudo apt update
+#sudo apt install jenkins
+#sudo systemctl start jenkins
+#sudo systemctl status jenkins
+
+
+
+
+
+
+sudo adduser jenkins
+sudo su
+su jenkins
+ssh-keygen
+sudo usermod -aG docker $(USER)
+sudo usermod -aG docker
+
+
+NOTE- we will do passwordless authentication
+we will generate key then place master kay in slave and slave key in master IN HOME DIRECTORY(/HOME/JENKINS)
+
+MASTER-
+cd /var/lib/jenkins
+@var/lib/jenkins# ssh-keygen  output ->enter list in which to save the key(/home/jenkins/.ssh/id_rsa)
+@var/lib/jenkins# su jenkins  -> means we will login as jenkins user
+jenkins@prashant#pwd  output var/lib/jenkins
+jenkins@prashant# whoami  output ->jenkuns this is masters default user
+jenkins@prashant# cd /home/jenkins/.ssh/
+jenkins@prashant.ssh # touch authorized_keys
+jenkins@prashant.ssh # ls    output ->id_rsa  is_rsa.pub  authorized_keys(here pest keys from node)
+jenkins@prashant#cat id_rsa.pub  ->copy the key
+============================================================================================================
+Go to JNODE SLAVE
+=======================================================================================================
+JNODE#apt install net-tools   the get IP of thismachine192.168.158.129
+JNODE#sudo apt update
+JNODE#apt install opejjdk-11-jdk
+
+JNODE#sudo apt-get install \
+    apt-transport-https \
+    ca-certificates curl software-properties-common
+
+JNODE#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add-
+JNODE#sudo add-apt-repository "deb [arch=amd64] | https://download.docker.com/linux/ubuntu focal stable"
+  
+JNODE#sudo apt-get update
+JNODE#sudo apt-get install docker-ce -y
+JNODE#sudo systemctl status docker
+
+#SUDO ADDUSER JENKINS
+#PASSWORD,NAME,PHONE,EMAIL
+JNODE# SUDO SU jenkins
+JENKINS@JNODE#WHOAMI   JENKINS
+JENKINS@JNODE# ssh-keygen  out put -> /home/jenkins/.ssh/id_rsa
+JENKINS@JNODE# cd .ssh/
+JENKINS@JNODE#cat is_rsa.pub    copy the key and pest in master jenkins
+JENKINS@JNODE# touch authorized_keys  (pest keys here from master jenkins)
+========================================================================================
+go to master create file
+#nano authorized_keys   then pest slaves kay  then save it.
+
+#JENKINS@master#cat is_rsa.pub    copy the key
+
+================================================================================================
+go to JNODE slave  
+jenkins@jnode#nano authorized_keys   then pest slaves kay  then save it.
+===================================================================================================
+for ssh testing go to master
+@master# ssh jenkins@192.168.158.129
+jenkins@jnode#pwd 
+
+FOR GO TO JNODE 
+MASTER# SSH JENKINS@192.168.158.128
+#PWD
+MASTER#EXIT
+ROOT@MASTER# SUDO USERMOD -aG jenkins
+root@master#su jenkins
+jenkins@master#
+
+gui -> open url 192.168.158.128:8080
+manage jenkins->manage plugins-> install below plugins
+available->slave setupPlugin,Gitlab Hook, Gitlab,SSH Build Agent,Pipeline plugins
+
+
+manage jenkins->creditainels->jenkins-> add creditianls->username(jenkins),passwords(passwoed)
+
+manage jenkins->manage nodes& cloudes->new node
+name-jnode,
+executer=1,
+remote root directory= /home/jenkins  ,
+lable=jnode,
+launch methos=by ssh,
+host(192.168.158.129)
+credentails add=jenkins,
+kind= ssh username with pvt key,
+username=jenkins,
+pvt key=pest of jnode-lock(id_rsa)   add
+
+
+
+ 
+
+

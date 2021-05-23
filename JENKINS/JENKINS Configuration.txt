@@ -1,0 +1,86 @@
+jenkins configuration
+1. home directory-> HOME DIRECTORY CAN BE CHANGE ALSO PERMISSION OF UNSER NEED TO GIVE,NEED ATLEAST 2GB RAM.
+2. url change-     -> URL IP CAN BE CHANGE WITH DOMAIN NAME
+3. email configuration -  > SERVICE ACCOUNT EMIAL OR ADMINS EMAIL NNED TO GIVE
+
+global tool configuration
+BUILD BANANE KE LIYE  jdk,GIT,maven,GRADLE,.NET, ANT
+
+manage plugins
+update, install, delete plugins
+
+manage node
+(node created then handshek of ssh done then add this node to jenkins)
+cloud-if jenkins in cloud then only node of cloude can be add
+new node-
+new, name, 
+executer=1
+route directory -(jnode ki pwd directory /home/jnode)-is directory on which build runs
+lable-is the name group of node server where build will be run ->this label will be used in jenkins cicd file
+Launch Method ->launch- by ssh  >host  (ip of host),
+credentials->  select credential (provided in credentials)  
+save
+
+Global security credentials 
+-all user related authentication
+
+manage credentials
+-storage for credentials
+generate ID for every credentials ->which will be used in jenkins cicd script.
+- for databse
+-api token key,
+-Docker hub,
+-ssh key,
+-git key,
+-github,
+-jenkins master,
+-GITLAB
+
+Manage users
+create,delete, modified users ->then go to  global security configuration then provide permissions.
+
+===============================================================================================================================================================================
+ogin to jenkins
+1 people-> will show number of users
+
+Manage jenkins->
+
+manage users-> create users
+
+manage credentials
+password kept here like,git,aws,gitlab.
+
+system configuration/configur system-> 
+           home directory,
+           lable->name of node,
+           number of executer,
+           jenkins url -> ip and DNS can be change hare(or can be change hare-#cd /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml)
+
+           git name service account,git url , git crendiatal.
+           email configuration
+
+MANAGE JENKINS /GLOBAL TOOL CONFIGURATIO
+for creating build we need clients
+MAVEN CLIENT
+-GIT CLIENT
+-GRADLECLIENT
+-JDK CLIENT
+-ANT CLIENT
+
+MANAGE NODES
+ ADD new nodes-> what ever buid we create for that we need to install thate software like,java,maven,gradel,docker.
+
+MANAGE JENKINS/PLUGIN MANAGER
+to install and update plugins
+docker - cloudbees docker build & release
+
+
+
+
+
+
+
+
+
+
+

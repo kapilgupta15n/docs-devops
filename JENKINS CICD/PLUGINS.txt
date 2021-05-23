@@ -1,0 +1,22 @@
+git
+-git
+-github
+
+deploy plugin
+-deploy to container
+
+TESTING PLUGIN
+-checkstyle
+-junit
+-pmd
+-findbugs
+-static Analysis collector
+
+
+JENKINS PLUGINS FOR DOCKER
+-cloudbees docker build & publish plugin
+
+
+-maven
+maven invoker
+maven integeration

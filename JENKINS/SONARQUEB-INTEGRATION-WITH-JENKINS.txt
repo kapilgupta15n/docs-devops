@@ -1,0 +1,18 @@
+SonarQube Scanner plugin version 2.11 or later is required.
+
+Manage Jenkins > Manage Plugins => install the SonarQube Scanner plugin.
+
+Add credentials 
+add the following information:
+-Kind: Secret Text
+-Scope: Global
+-Secret: Generate a token at User > My Account > Security in SonarQube, and copy and paste it here.
+-Click OK.
+
+=> Manage Jenkins > Configure System.
+From the SonarQube Servers section, 
+-click Add SonarQube
+-Name: Give a unique name to your SonarQube instance.
+-Server URL: Your SonarQube instance URL.
+-Credentials: Select the credentials created during step 4.
+-Click Save

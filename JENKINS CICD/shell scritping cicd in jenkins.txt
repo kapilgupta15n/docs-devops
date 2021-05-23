@@ -1,0 +1,17 @@
+whoami
+rm -rf docker-build
+mkdir docker-build
+cd docker-build
+#copy projech war file to docker-build home directory
+cp /var/lib/jenkins/angular/addressbook.war .
+#create docker file
+touch Dockerfile
+cat<<EOT>> Dockerfile
+from tomcat
+ADD addressbook.war /var/local/tomcat/webapps
+CMD "catalina.sh" "run"
+EXPOSE 8080
+EOT
+#now buils docker image then create container from image
+sudo docker build -t prashantkatare/image1 .
+sudo docker run -i -t -d --name mycontainer -p 080:8080 prashantkatare/image1 /bin/sh

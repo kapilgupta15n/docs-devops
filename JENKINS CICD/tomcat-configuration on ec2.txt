@@ -1,0 +1,68 @@
+take ssh of ec2 machine
+ssh -i <key.pem> ec2-user@192.168.3.18
+##install JAVA
+#yum install java 1.8.*
+#export JAVA_HOME=/use/lib/jvm/java-1.8.0-openjdk-1.8.0.161-0.b14.e17_4.x86_64
+edit /etc/profile file to set JAVA_HOME path permanently for all users
+
+download tomcatpackage from https://tomcat.apache.org/download-80.cgi
+copy and extract giz file under to /opt/tomcat directory
+cd opt/
+#wget https://tomcat.apache.org/download-80.cgi
+#ls  => apache-tomcat.8.5.31.tar.gz
+#tar -zvxf apache-tomcat.8.5.31.tar.gz
+#cd apache-tomcat.8.5.31
+#ls  => bin  conf  lib logs releast notes running.txt temp webapp work
+add below users to tomcat-user.xml file under conf directory in tomcat
+
+-start tomcat service by using startup.sh under bin directory.
+# cd bin
+#pwd 
+/opt/apache-maven8.5.31/bin
+#ls
+#chmod +X startup.sh
+#chmod +X shutdown.sh
+# ./startup.sh                #./shutdown.sh
+
+#echo $PATH TO KNOW LOCAL SYSTEM PATH
+/usr/local/bin
+
+-every time to start/stop service we need to come in this bin{/opt/apache-maven8.5.31/bin} directory,to avoid this we create a soft link
+-create a soft link to start/stop service if necessary
+
+#ln -s /opt/apache-maven8.5.31/bin/startup.sh /usr/local/bin/tomcatup
+#ln -s /opt/apache-maven8.5.31/bin/shutdown.sh /usr/local/bin/tomcatdown
+
+-change default port number from8080 to 8090 .because jenkins also runs on 8080
+# cd conf
+# nano server.xml
+change connector port to 8090 from 8080, two place  then save this file.
+restartthe service
+#tomcatdown
+#tomcatup
+
+for EC2 machine we need to open inboune port 8090 in security group.
+===========================================================================
+find/ --name context.xml 
+update all three files
+nano/webapps/context.xml
+commend line be apply <!--   before the line value class name and --> after the line
+restarttomcat service.
+
+to create users with roles
+cd /conf
+nano tomcat_users.xml
+nano tomcat-users.xml
+-->
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>
+<user username="admin" password="admin" roles="manager-gui,manager-script,manager-jmx"/>
+<user username="deployer" password="deployer" roles="manager-script"/>
+<user username="tomcat" password="secret" roles="manager-gui"/>
+<!--
+
+save.
+pest above between tomcat-users
+-check point open browser type 192.168.3.18:8090
